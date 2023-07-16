@@ -3,9 +3,14 @@ const multer = require('multer');
 const cors = require('cors');
 const csv = require('csv-parser');
 const fs = require('fs');
+const mongoose = require('mongoose');
 
 const app = express();
 app.use(cors());
+const DATABASE_URL = process.env.DATABASE_URL
+mongoose.connect(DATABASE_URL);
+const database = mongoose.connection
+
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -17,7 +22,21 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({ storage });
-
+const schema = new mongoose.Schema({
+    modelNumber: {
+        type: String,
+        required: true
+    },
+    unitPrice: {
+        type: Number,
+        required: true
+    },
+    quantity: {
+        type: Number,
+        required: true
+    }
+})
+const CSVModel = mongoose.model('CSVModel', schema);
 
 app.post('/upload', upload.single('csvFile'), (req, res) => {
     const results = {};
@@ -39,6 +58,14 @@ app.post('/upload', upload.single('csvFile'), (req, res) => {
                 res.send(results);
                 return;
             }
+
+            // Create a new CSVModel instance and save it to the database
+            const csvModel = new CSVModel({
+                modelNumber,
+                unitPrice,
+                quantity
+            });
+            csvModel.save()
             res.send({ message: 'Validation passed', data: csvModel, status: "success" });
         })
 });
