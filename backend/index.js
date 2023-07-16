@@ -11,7 +11,6 @@ const DATABASE_URL = process.env.DATABASE_URL
 mongoose.connect(DATABASE_URL);
 const database = mongoose.connection
 
-
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, 'uploads/');
