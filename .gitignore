@@ -1,0 +1,18 @@
+# Ignore project build files
+/build
+
+# Ignore IDE-specific files and directories
+.idea/
+.vscode/
+
+# Ignore generated documentation
+/docs
+
+# Ignore dependencies
+/node_modules
+/vendor
+
+# Ignore user-specific files
+/.env
+/.env.*
+/.config
